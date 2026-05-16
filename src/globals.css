@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0b0e14;
+  --foreground: #ffffff;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-vt323), monospace;
+    @apply bg-[#0b0e14] text-white;
+    image-rendering: pixelated;
+  }
+}
+
+@layer components {
+  /* Borda estilo console retro */
+  .pixel-box {
+    @apply bg-[#1a1f2c] border-4 border-[#2d3748] relative flex flex-col;
+    box-shadow: 
+      inset -4px -4px 0px #000, 
+      inset 4px 4px 0px #4a5568,
+      4px 4px 0px rgba(0,0,0,0.5);
+  }
+
+  .pixel-header {
+    @apply bg-[#2d3748] border-b-4 border-[#1a1f2c] px-3 py-1 text-base tracking-wider uppercase text-white font-bold flex justify-between items-center;
+  }
+
+  /* Chão quadriculado mais visível */
+  .room-floor {
+    background-color: #1a2333;
+    background-image: 
+      linear-gradient(45deg, #151a26 25%, transparent 25%), 
+      linear-gradient(-45deg, #151a26 25%, transparent 25%), 
+      linear-gradient(45deg, transparent 75%, #151a26 75%), 
+      linear-gradient(-45deg, transparent 75%, #151a26 75%);
+    background-size: 32px 32px;
+    background-position: 0 0, 0 16px, 16px -16px, -16px 0px;
+  }
+
+  .pixel-scroll::-webkit-scrollbar { width: 8px; }
+  .pixel-scroll::-webkit-scrollbar-track { @apply bg-[#0b0e14]; }
+  .pixel-scroll::-webkit-scrollbar-thumb { @apply bg-[#2d3748] border-2 border-[#4a5568]; }
+}
+
+.font-pixel {
+  font-family: var(--font-vt323), monospace;
+}

@@ -1,12 +1,12 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useAgentStore } from '@/store/useAgentStore';
-import { useShallow } from 'zustand/react/shallow';
 
 export const Sidebar = memo(function Sidebar() {
-  const agents = useAgentStore(useShallow(s => Object.values(s.agents)));
+  const agentsById = useAgentStore(s => s.agents);
+  const agents = useMemo(() => Object.values(agentsById), [agentsById]);
   const selectAgent = useAgentStore(s => s.selectAgent);
   const selectedAgentId = useAgentStore(s => s.selectedAgentId);
   const [filter, setFilter] = useState<'all' | 'working' | 'idle'>('all');

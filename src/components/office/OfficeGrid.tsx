@@ -1,17 +1,15 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useShallow } from 'zustand/react/shallow';
 import { useAgentStore } from '@/store/useAgentStore';
 import { RoomCard } from './RoomCard';
 import { ROOMS } from '@/config/constants';
 
 export function OfficeGrid() {
   const [clock, setClock] = useState('');
-  const { agents, connectionStatus } = useAgentStore(useShallow(s => ({
-    agents: Object.values(s.agents),
-    connectionStatus: s.connectionStatus,
-  })));
+  const agentsById = useAgentStore(s => s.agents);
+  const connectionStatus = useAgentStore(s => s.connectionStatus);
+  const agents = useMemo(() => Object.values(agentsById), [agentsById]);
 
   useEffect(() => {
     const tick = () => setClock(new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }));

@@ -1,9 +1,8 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import Image from 'next/image';
 import { useAgentStore } from '@/store/useAgentStore';
-import { useShallow } from 'zustand/react/shallow';
 import { AgentAvatar } from './AgentAvatar';
 import { RoomConfig } from '@/config/constants';
 
@@ -12,9 +11,11 @@ interface RoomCardProps {
 }
 
 export const RoomCard = memo(function RoomCard({ room }: RoomCardProps) {
-  const agents = useAgentStore(useShallow(s => 
-    Object.values(s.agents).filter(a => a.room === room.id)
-  ));
+  const agentsById = useAgentStore(s => s.agents);
+  const agents = useMemo(
+    () => Object.values(agentsById).filter(a => a.room === room.id),
+    [agentsById, room.id]
+  );
 
   const isLarge = room.size === 'large';
 

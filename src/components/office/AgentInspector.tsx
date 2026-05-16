@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useAgentStore } from '@/store/useAgentStore';
-import { useShallow } from 'zustand/react/shallow';
+
+const EMPTY_MESSAGES: never[] = [];
 
 export function AgentInspector() {
   const [input, setInput] = useState('');
@@ -12,8 +13,8 @@ export function AgentInspector() {
   
   const selectedAgentId = useAgentStore(s => s.selectedAgentId);
   const selectAgent = useAgentStore(s => s.selectAgent);
-  const agent = useAgentStore(useShallow(s => selectedAgentId ? s.agents[selectedAgentId] : null));
-  const messages = useAgentStore(useShallow(s => selectedAgentId ? s.agentMessages[selectedAgentId] || [] : []));
+  const agent = useAgentStore(s => selectedAgentId ? s.agents[selectedAgentId] : null);
+  const messages = useAgentStore(s => selectedAgentId ? s.agentMessages[selectedAgentId] : undefined) ?? EMPTY_MESSAGES;
   const sendCommand = useAgentStore(s => s.sendAgentCommand);
   const updateAvatar = useAgentStore(s => s.updateAgentAvatar);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);

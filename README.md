@@ -2,6 +2,10 @@
 
 Dashboard em Next.js para visualizar agentes OpenClaw em um escritorio pixelado, com salas, avatares, status, comandos por agente e modo demo.
 
+## Roadmap
+
+O plano de evolucao do cockpit esta em [docs/ROADMAP.md](docs/ROADMAP.md).
+
 ## Rodar local
 
     npm install

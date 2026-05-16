@@ -3,7 +3,9 @@ import { RoomId } from '@/types/agent';
 export const OPENCLAW_URL = process.env.NEXT_PUBLIC_OPENCLAW_URL || '';
 export const OPENCLAW_TOKEN = process.env.NEXT_PUBLIC_OPENCLAW_TOKEN || '';
 export const WS_URL = OPENCLAW_URL;
-export const MOCK_MODE = process.env.NEXT_PUBLIC_MOCK_MODE === 'true';
+export const MOCK_MODE =
+  process.env.NEXT_PUBLIC_MOCK_MODE === 'true' ||
+  (process.env.NEXT_PUBLIC_MOCK_MODE !== 'false' && !OPENCLAW_URL);
 
 export interface RoomConfig {
   id: RoomId;

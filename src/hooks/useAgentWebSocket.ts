@@ -10,10 +10,7 @@ function getRandomItem<T>(arr: T[]): T {
 
 function resolveOpenClawUrl() {
   if (OPENCLAW_URL) return OPENCLAW_URL;
-  if (typeof window === 'undefined') return 'ws://127.0.0.1:18789';
-
-  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  return `${protocol}//${window.location.hostname}:18789`;
+  return '';
 }
 
 export function useAgentWebSocket() {
@@ -84,7 +81,13 @@ export function useAgentWebSocket() {
       const connect = () => {
         if (!active) return;
         try {
-          const url = new URL(resolveOpenClawUrl());
+          const openClawUrl = resolveOpenClawUrl();
+          if (!openClawUrl) {
+            setStatusRef.current('disconnected');
+            return;
+          }
+
+          const url = new URL(openClawUrl);
           if (OPENCLAW_TOKEN) url.searchParams.set('token', OPENCLAW_TOKEN);
           
           ws = new WebSocket(url.toString());

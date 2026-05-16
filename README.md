@@ -1,4 +1,4 @@
-# Agente Office UI - OpenClaw Pixel World
+# Agente Office UI - OpenClaw
 
 Dashboard em Next.js para visualizar agentes OpenClaw em um escritorio pixelado, com salas, avatares, status, comandos por agente e modo demo.
 
@@ -23,26 +23,26 @@ Exemplo:
 
 ## Modo demo
 
-Use para ver o pixel world com agentes simulados se o WebSocket do OpenClaw ainda nao estiver disponivel:
+O modo demo e o padrao quando `NEXT_PUBLIC_OPENCLAW_URL` nao esta configurado. Use agentes simulados para validar a UI sem depender do WebSocket do OpenClaw:
 
     NEXT_PUBLIC_MOCK_MODE=true npm run dev:lan
 
 ## Conectar no OpenClaw real
 
-Por padrao, quando voce acessa pela rede, o frontend tenta conectar o WebSocket no mesmo host da pagina, porta 18789.
+Para conectar no OpenClaw real, informe explicitamente o WebSocket publico do gateway. Nao exponha token no codigo.
 
 Exemplo:
 
 - UI: http://192.168.100.104:3000
-- WebSocket esperado: ws://192.168.100.104:18789
+- WebSocket configurado: ws://HOST_PUBLICO_DO_GATEWAY:18789
 
-Se precisar apontar para outro endereco:
-
-    NEXT_PUBLIC_OPENCLAW_URL=ws://192.168.100.104:18789 npm run dev:lan
+    NEXT_PUBLIC_OPENCLAW_URL=ws://HOST_PUBLICO_DO_GATEWAY:18789 npm run dev:lan
 
 Se o gateway exigir token:
 
-    NEXT_PUBLIC_OPENCLAW_TOKEN=seu_token NEXT_PUBLIC_OPENCLAW_URL=ws://192.168.100.104:18789 npm run dev:lan
+    NEXT_PUBLIC_OPENCLAW_TOKEN=seu_token NEXT_PUBLIC_OPENCLAW_URL=ws://HOST_PUBLICO_DO_GATEWAY:18789 npm run dev:lan
+
+Observacao: no ambiente local da Lilith, o gateway esta em loopback. Nesse caso, browsers acessando pela rede nao conseguem abrir `ws://192.168.100.104:18789`; rode em modo demo ou configure um endpoint publico/proxy seguro para o gateway.
 
 ## Scripts
 
@@ -57,4 +57,3 @@ Se o gateway exigir token:
 
     npm run lint
     npm run build
-

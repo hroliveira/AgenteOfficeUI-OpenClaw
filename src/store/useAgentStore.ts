@@ -18,6 +18,7 @@ interface AgentStore {
   sendMessage: ((msg: Record<string, unknown>) => void) | null;
 
   // actions
+  bootstrapAgents: (agents: AgentBootstrap[]) => void;
   processEvent: (event: IncomingAgentEvent) => void;
   setConnectionStatus: (status: 'connected' | 'disconnected' | 'connecting') => void;
   getAgentsByRoom: (roomId: RoomId) => Agent[];
@@ -26,6 +27,14 @@ interface AgentStore {
   updateAgentPosition: (agentId: string, x: number, y: number) => void;
   updateAgentAvatar: (agentId: string, avatar: string) => void;
   setSendMessage: (fn: ((msg: Record<string, unknown>) => void) | null) => void;
+}
+
+interface AgentBootstrap {
+  id: string;
+  name?: string;
+  status?: AgentStatus;
+  room?: RoomId;
+  avatar?: string;
 }
 
 interface IncomingAgentEvent {
@@ -83,6 +92,32 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
   selectedAgentId: null,
   agentMessages: {},
   sendMessage: null,
+
+  bootstrapAgents: (incomingAgents) => {
+    set(state => {
+      const agents = { ...state.agents };
+      const eventLog = incomingAgents.length
+        ? addLog(state.eventLog, `${incomingAgents.length} agentes carregados do OpenClaw`)
+        : state.eventLog;
+
+      for (const incoming of incomingAgents) {
+        if (!incoming.id) continue;
+        const current = agents[incoming.id];
+        agents[incoming.id] = {
+          id: incoming.id,
+          name: incoming.name || current?.name || humanizeName(incoming.id),
+          status: incoming.status || current?.status || 'idle',
+          lastTool: current?.lastTool ?? null,
+          room: incoming.room || current?.room || randomRoom(),
+          position: current?.position || randomPosition(),
+          avatar: incoming.avatar || current?.avatar || randomAvatar(),
+          updatedAt: Date.now(),
+        };
+      }
+
+      return { agents, eventLog };
+    });
+  },
 
   processEvent: (event) => {
     const id = event.agentId || event.id || event.name || event.agent_id || 

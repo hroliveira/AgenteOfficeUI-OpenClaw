@@ -4,6 +4,13 @@ import { useEffect, useRef } from 'react';
 import { useAgentStore } from '@/store/useAgentStore';
 import { MOCK_MODE, OPENCLAW_URL, OPENCLAW_TOKEN, AGENT_NAMES, TOOLS } from '@/config/constants';
 
+interface ApiAgent {
+  id: string;
+  name?: string;
+  status?: 'idle' | 'working' | 'busy' | 'error';
+  avatar?: string;
+}
+
 function getRandomItem<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -14,23 +21,26 @@ function resolveOpenClawUrl() {
 }
 
 export function useAgentWebSocket() {
+  const bootstrapAgents = useAgentStore(s => s.bootstrapAgents);
   const processEvent = useAgentStore(s => s.processEvent);
   const setConnectionStatus = useAgentStore(s => s.setConnectionStatus);
   const updateAgentPosition = useAgentStore(s => s.updateAgentPosition);
   const setSendMessage = useAgentStore(s => s.setSendMessage);
 
 
+  const bootstrapAgentsRef = useRef(bootstrapAgents);
   const processEventRef = useRef(processEvent);
   const setStatusRef = useRef(setConnectionStatus);
   const updatePosRef = useRef(updateAgentPosition);
   const setSendMessageRef = useRef(setSendMessage);
 
   useEffect(() => {
+    bootstrapAgentsRef.current = bootstrapAgents;
     processEventRef.current = processEvent;
     setStatusRef.current = setConnectionStatus;
     updatePosRef.current = updateAgentPosition;
     setSendMessageRef.current = setSendMessage;
-  }, [processEvent, setConnectionStatus, updateAgentPosition, setSendMessage]);
+  }, [bootstrapAgents, processEvent, setConnectionStatus, updateAgentPosition, setSendMessage]);
 
   useEffect(() => {
     let active = true;
@@ -38,16 +48,35 @@ export function useAgentWebSocket() {
     let mockEventTimer: ReturnType<typeof setInterval> | null = null;
     let mockMoveTimer: ReturnType<typeof setInterval> | null = null;
 
-    const init = () => {
+    const loadConfiguredAgents = async () => {
+      try {
+        const response = await fetch('/api/agents', { cache: 'no-store' });
+        if (!response.ok) return [];
+        const data = await response.json() as { agents?: ApiAgent[] };
+        const agents = data.agents || [];
+        if (active && agents.length) {
+          bootstrapAgentsRef.current(agents);
+        }
+        return agents.map(agent => agent.id);
+      } catch {
+        return [];
+      }
+    };
+
+    const init = async () => {
+      const configuredAgentIds = await loadConfiguredAgents();
+      const fallbackAgentIds = AGENT_NAMES.slice(0, 8).map(name => name.toLowerCase());
+      const simulatedAgentIds = configuredAgentIds.length ? configuredAgentIds : fallbackAgentIds;
+
       if (MOCK_MODE) {
         if (active) setStatusRef.current('connected');
 
         // Inicializa os agentes
-        AGENT_NAMES.slice(0, 8).forEach((name, i) => {
+        if (!configuredAgentIds.length) fallbackAgentIds.forEach((agentId, i) => {
           setTimeout(() => {
             if (active) processEventRef.current({ 
               type: 'agent.started', 
-              agentId: name.toLowerCase() 
+              agentId
             });
           }, i * 200);
         });
@@ -55,7 +84,7 @@ export function useAgentWebSocket() {
         // Loop de Eventos (Trabalho/Ferramentas)
         mockEventTimer = setInterval(() => {
           if (!active) return;
-          const agentId = getRandomItem(AGENT_NAMES).toLowerCase();
+          const agentId = getRandomItem(simulatedAgentIds);
           const type = getRandomItem(['agent.tool.called', 'agent.finished', 'agent.tool.called'] as const);
           
           processEventRef.current({
@@ -68,7 +97,7 @@ export function useAgentWebSocket() {
         // NOVO: Loop de Movimentação (Vida no ambiente)
         mockMoveTimer = setInterval(() => {
           if (!active) return;
-          const agentId = getRandomItem(AGENT_NAMES).toLowerCase();
+          const agentId = getRandomItem(simulatedAgentIds);
           // Gera uma nova posição aleatória dentro da sala
           const newX = Math.floor(Math.random() * 60) + 20;
           const newY = Math.floor(Math.random() * 60) + 20;

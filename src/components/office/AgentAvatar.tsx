@@ -1,7 +1,8 @@
 'use client';
 
 import { memo, useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+import { motion, AnimatePresence, type TargetAndTransition } from 'framer-motion';
 import { Agent } from '@/types/agent';
 import { useAgentStore } from '@/store/useAgentStore';
 
@@ -33,22 +34,20 @@ export const AgentAvatar = memo(function AgentAvatar({ agent }: AgentAvatarProps
     }
   }, [agent.position]);
 
-  const workingAnim = {
+  const workingAnim: TargetAndTransition = {
     y: [0, -6, 0],
-    transition: { repeat: Infinity, duration: 0.6, times: [0, 0.5, 1], ease: "linear" }
+    transition: { repeat: Infinity, duration: 0.6, times: [0, 0.5, 1], ease: 'linear' }
   };
 
-  // Animação de caminhada (Wobble lateral)
-  const walkingAnim = {
+  const walkingAnim: TargetAndTransition = {
     rotate: [-5, 5, -5],
     y: [0, -3, 0],
-    transition: { repeat: Infinity, duration: 0.4, ease: "linear" }
+    transition: { repeat: Infinity, duration: 0.4, ease: 'linear' }
   };
 
-  // Animação Idle (Respiração)
-  const idleAnim = {
+  const idleAnim: TargetAndTransition = {
     scale: [1, 1.02, 1],
-    transition: { repeat: Infinity, duration: 3, ease: "easeInOut" }
+    transition: { repeat: Infinity, duration: 3, ease: 'easeInOut' }
   };
 
   return (
@@ -65,7 +64,7 @@ export const AgentAvatar = memo(function AgentAvatar({ agent }: AgentAvatarProps
         damping: 15,
         mass: 1.2
       }}
-      className="absolute group z-10 cursor-pointer"
+      className="absolute group z-10 cursor-pointer -translate-x-1/2 -translate-y-1/2"
       onClick={(e) => {
         e.stopPropagation();
         selectAgent(agent.id);
@@ -78,15 +77,17 @@ export const AgentAvatar = memo(function AgentAvatar({ agent }: AgentAvatarProps
           idleAnim
         }
         className={`
-          w-14 h-14 border-2 flex flex-col items-center justify-center
+          w-12 h-12 sm:w-14 sm:h-14 border-2 flex flex-col items-center justify-center
           transition-all duration-300 relative rounded-full overflow-hidden
           ${STATUS_COLOR[agent.status]}
           ${isSelected ? 'ring-2 ring-white scale-110 z-20 shadow-[0_0_20px_white]' : 'scale-100'}
         `}
       >
-        <img 
+        <Image
           src={agent.avatar} 
           alt={agent.name}
+          width={56}
+          height={56}
           className="w-full h-full object-cover"
         />
         
@@ -99,7 +100,7 @@ export const AgentAvatar = memo(function AgentAvatar({ agent }: AgentAvatarProps
               exit={{ opacity: 0, scale: 0.5 }}
               className="absolute -top-6 bg-white text-black text-[8px] font-bold px-1.5 py-0.5 rounded-sm border border-black whitespace-nowrap z-[60]"
             >
-              🔧 {agent.lastTool.toUpperCase()}
+              {agent.lastTool.toUpperCase()}
               <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-white" />
             </motion.div>
           )}

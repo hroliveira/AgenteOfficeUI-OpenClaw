@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Agente Office UI - OpenClaw Pixel World
 
-## Getting Started
+Dashboard em Next.js para visualizar agentes OpenClaw em um escritorio pixelado, com salas, avatares, status, comandos por agente e modo demo.
 
-First, run the development server:
+## Rodar local
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+    npm install
+    npm run dev
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra: http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Rodar na rede local
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    npm run dev:lan
 
-## Learn More
+Depois acesse pelo IP da maquina onde o projeto esta rodando:
 
-To learn more about Next.js, take a look at the following resources:
+    http://SEU_IP_LOCAL:3000
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Exemplo:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    http://192.168.100.104:3000
 
-## Deploy on Vercel
+## Modo demo
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Use para ver o pixel world com agentes simulados se o WebSocket do OpenClaw ainda nao estiver disponivel:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    NEXT_PUBLIC_MOCK_MODE=true npm run dev:lan
+
+## Conectar no OpenClaw real
+
+Por padrao, quando voce acessa pela rede, o frontend tenta conectar o WebSocket no mesmo host da pagina, porta 18789.
+
+Exemplo:
+
+- UI: http://192.168.100.104:3000
+- WebSocket esperado: ws://192.168.100.104:18789
+
+Se precisar apontar para outro endereco:
+
+    NEXT_PUBLIC_OPENCLAW_URL=ws://192.168.100.104:18789 npm run dev:lan
+
+Se o gateway exigir token:
+
+    NEXT_PUBLIC_OPENCLAW_TOKEN=seu_token NEXT_PUBLIC_OPENCLAW_URL=ws://192.168.100.104:18789 npm run dev:lan
+
+## Scripts
+
+- npm run dev: servidor de desenvolvimento local.
+- npm run dev:lan: servidor de desenvolvimento exposto em 0.0.0.0.
+- npm run build: build de producao.
+- npm run start: servidor de producao local depois do build.
+- npm run start:lan: servidor de producao exposto em 0.0.0.0.
+- npm run lint: validacao ESLint.
+
+## Validacao
+
+    npm run lint
+    npm run build
+

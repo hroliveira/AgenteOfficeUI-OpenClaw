@@ -2,12 +2,16 @@ export type AgentStatus = 'idle' | 'working' | 'busy' | 'error';
 
 export type RoomId =
   | 'conference'
-  | 'server-room'
-  | 'support'
-  | 'lab'
-  | 'office'
-  | 'cloud'
-  | 'treasury';
+  | 'jarvis'
+  | 'kitchen'
+  | 'scribe'
+  | 'atlas'
+  | 'claw'
+  | 'sentinel'
+  | 'pixel'
+  | 'nova'
+  | 'vibe'
+  | 'trendy';
 
 export interface Agent {
   id: string;

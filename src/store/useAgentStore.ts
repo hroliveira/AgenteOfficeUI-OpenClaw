@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Agent, AgentEvent, AgentStatus, RoomId } from '@/types/agent';
+import { Agent, AgentStatus, RoomId } from '@/types/agent';
 import { AGENT_NAMES, ROOM_IDS } from '@/config/constants';
 
 interface Message {
@@ -15,19 +15,36 @@ interface AgentStore {
   eventLog: { id: string; message: string; timestamp: number }[];
   selectedAgentId: string | null;
   agentMessages: Record<string, Message[]>;
-  sendMessage: ((msg: any) => void) | null;
+  sendMessage: ((msg: Record<string, unknown>) => void) | null;
 
   // actions
-  processEvent: (event: any) => void;
+  processEvent: (event: IncomingAgentEvent) => void;
   setConnectionStatus: (status: 'connected' | 'disconnected' | 'connecting') => void;
   getAgentsByRoom: (roomId: RoomId) => Agent[];
   selectAgent: (id: string | null) => void;
   sendAgentCommand: (agentId: string, command: string) => void;
   updateAgentPosition: (agentId: string, x: number, y: number) => void;
   updateAgentAvatar: (agentId: string, avatar: string) => void;
-  setSendMessage: (fn: ((msg: any) => void) | null) => void;
+  setSendMessage: (fn: ((msg: Record<string, unknown>) => void) | null) => void;
 }
 
+interface IncomingAgentEvent {
+  id?: string;
+  name?: string;
+  agentId?: string;
+  agent_id?: string;
+  event?: string;
+  method?: string;
+  payload?: {
+    id?: string;
+    name?: string;
+    agentId?: string;
+  };
+  status?: AgentStatus;
+  tool?: string;
+  tool_name?: string;
+  type?: string;
+}
 
 function randomRoom(): RoomId {
   return ROOM_IDS[Math.floor(Math.random() * ROOM_IDS.length)];
@@ -67,7 +84,7 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
   agentMessages: {},
   sendMessage: null,
 
-  processEvent: (event: any) => {
+  processEvent: (event) => {
     const id = event.agentId || event.id || event.name || event.agent_id || 
                event.payload?.agentId || event.payload?.id || event.payload?.name;
     
@@ -93,7 +110,7 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
       }
 
       const agent = { ...agents[id] };
-      let statusUpdate: AgentStatus = event.status || agent.status;
+      let statusUpdate: AgentStatus = event.status ?? agent.status;
       let logMessage = '';
 
       const type = event.type || event.event;

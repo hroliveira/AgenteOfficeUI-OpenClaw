@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useAgentStore } from '@/store/useAgentStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -46,7 +47,7 @@ export function AgentInspector() {
                 onClick={() => setShowAvatarPicker(!showAvatarPicker)}
                 className="w-12 h-12 border-2 border-slate-600 bg-slate-900 rounded-full overflow-hidden hover:border-cyan-400 transition-colors"
               >
-                <img src={agent.avatar} alt="" className="w-full h-full object-cover" />
+                <Image src={agent.avatar} alt="" width={48} height={48} className="h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-[8px] text-white">
                   EDIT
                 </div>
@@ -65,7 +66,7 @@ export function AgentInspector() {
                         agent.avatar === av ? 'border-cyan-400' : 'border-slate-700'
                       }`}
                     >
-                      <img src={av} alt="" className="w-full h-full object-cover" />
+                      <Image src={av} alt="" width={40} height={40} className="h-full w-full object-cover" />
                     </button>
                   ))}
                 </div>

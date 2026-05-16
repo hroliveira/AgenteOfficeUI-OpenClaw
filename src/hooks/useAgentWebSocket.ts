@@ -8,6 +8,14 @@ function getRandomItem<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function resolveOpenClawUrl() {
+  if (OPENCLAW_URL) return OPENCLAW_URL;
+  if (typeof window === 'undefined') return 'ws://127.0.0.1:18789';
+
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  return `${protocol}//${window.location.hostname}:18789`;
+}
+
 export function useAgentWebSocket() {
   const processEvent = useAgentStore(s => s.processEvent);
   const setConnectionStatus = useAgentStore(s => s.setConnectionStatus);
@@ -18,12 +26,14 @@ export function useAgentWebSocket() {
   const processEventRef = useRef(processEvent);
   const setStatusRef = useRef(setConnectionStatus);
   const updatePosRef = useRef(updateAgentPosition);
+  const setSendMessageRef = useRef(setSendMessage);
 
   useEffect(() => {
     processEventRef.current = processEvent;
     setStatusRef.current = setConnectionStatus;
     updatePosRef.current = updateAgentPosition;
-  }, [processEvent, setConnectionStatus, updateAgentPosition]);
+    setSendMessageRef.current = setSendMessage;
+  }, [processEvent, setConnectionStatus, updateAgentPosition, setSendMessage]);
 
   useEffect(() => {
     let active = true;
@@ -74,7 +84,7 @@ export function useAgentWebSocket() {
       const connect = () => {
         if (!active) return;
         try {
-          const url = new URL(OPENCLAW_URL);
+          const url = new URL(resolveOpenClawUrl());
           if (OPENCLAW_TOKEN) url.searchParams.set('token', OPENCLAW_TOKEN);
           
           ws = new WebSocket(url.toString());
@@ -82,9 +92,8 @@ export function useAgentWebSocket() {
           ws.onopen = () => { 
             console.log('WS Connected to:', url.toString());
             if (active) {
-              setConnectionStatus('connected');
-              // Injeta a função de envio na store
-              setSendMessage((msg) => {
+              setStatusRef.current('connected');
+              setSendMessageRef.current((msg) => {
                 if (ws?.readyState === WebSocket.OPEN) {
                   ws.send(JSON.stringify(msg));
                 }
@@ -100,19 +109,21 @@ export function useAgentWebSocket() {
               const data = JSON.parse(e.data);
               console.log('WS Event:', data);
               processEventRef.current(data); 
-            } catch (err) {}
+            } catch {
+              // Ignore malformed gateway messages and keep the stream alive.
+            }
           };
           ws.onclose = () => {
             if (active) {
-              setConnectionStatus('disconnected');
-              setSendMessage(null);
+              setStatusRef.current('disconnected');
+              setSendMessageRef.current(null);
               setTimeout(connect, 5000);
             }
           };
-        } catch (err) {
+        } catch {
           if (active) {
-            setConnectionStatus('disconnected');
-            setSendMessage(null);
+            setStatusRef.current('disconnected');
+            setSendMessageRef.current(null);
             setTimeout(connect, 5000);
           }
         }

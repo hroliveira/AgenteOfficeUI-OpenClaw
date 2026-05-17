@@ -35,6 +35,13 @@ interface AgentBootstrap {
   status?: AgentStatus;
   room?: RoomId;
   avatar?: string;
+  emoji?: string;
+  description?: string;
+  workspace?: string;
+  primaryModel?: string;
+  fallbackModels?: string[];
+  heartbeat?: string;
+  skills?: string[];
 }
 
 interface IncomingAgentEvent {
@@ -111,6 +118,13 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
           room: incoming.room || current?.room || randomRoom(),
           position: current?.position || randomPosition(),
           avatar: incoming.avatar || current?.avatar || randomAvatar(),
+          emoji: incoming.emoji || current?.emoji,
+          description: incoming.description || current?.description,
+          workspace: incoming.workspace || current?.workspace,
+          primaryModel: incoming.primaryModel || current?.primaryModel,
+          fallbackModels: incoming.fallbackModels || current?.fallbackModels || [],
+          heartbeat: incoming.heartbeat || current?.heartbeat,
+          skills: incoming.skills || current?.skills || [],
           updatedAt: Date.now(),
         };
       }

@@ -22,6 +22,13 @@ export interface Agent {
   position: { x: number; y: number };
   avatar: string;
   updatedAt: number;
+  emoji?: string;
+  description?: string;
+  workspace?: string;
+  primaryModel?: string;
+  fallbackModels?: string[];
+  heartbeat?: string;
+  skills?: string[];
 }
 
 export type AgentEventType =

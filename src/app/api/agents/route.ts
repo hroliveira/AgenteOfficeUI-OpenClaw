@@ -12,6 +12,16 @@ type OpenClawAgentConfig = {
     emoji?: string;
     theme?: string;
   };
+  model?: {
+    primary?: string;
+    fallbacks?: string[];
+  };
+  workspace?: string;
+  cwd?: string;
+  heartbeat?: {
+    every?: string;
+  };
+  skills?: string[];
 };
 
 type OpenClawConfig = {
@@ -27,10 +37,23 @@ const AVATARS = [
 ];
 
 const OPENCLAW_CONFIG_PATH = '/home/helinton/.openclaw/openclaw.json';
+const HOME_PATH = '/home/helinton';
 
 function avatarFor(agentId: string) {
   const hash = [...agentId].reduce((sum, char) => sum + char.charCodeAt(0), 0);
   return AVATARS[hash % AVATARS.length];
+}
+
+function displayPath(path?: string) {
+  if (!path) return undefined;
+  return path.startsWith(HOME_PATH) ? path.replace(HOME_PATH, '~') : path;
+}
+
+function heartbeatStatus(agent: OpenClawAgentConfig) {
+  if (agent.heartbeat === undefined || agent.heartbeat === null) return 'Not configured';
+  if (agent.heartbeat.every === '0m') return 'Manual / disabled';
+  if (agent.heartbeat.every) return `Every ${agent.heartbeat.every}`;
+  return 'Enabled';
 }
 
 export async function GET() {
@@ -45,6 +68,12 @@ export async function GET() {
         status: 'idle',
         avatar: avatarFor(agent.id!),
         description: agent.identity?.theme || '',
+        emoji: agent.identity?.emoji || '',
+        workspace: displayPath(agent.workspace || agent.cwd),
+        primaryModel: agent.model?.primary || 'default',
+        fallbackModels: agent.model?.fallbacks || [],
+        heartbeat: heartbeatStatus(agent),
+        skills: agent.skills || [],
       }));
 
     return NextResponse.json({ agents });

@@ -32,7 +32,7 @@ Critérios de aceite:
 
 ### 2. Painel de agente com dados reais
 
-Status: agendada para 2026-05-20.
+Status: feito em 2026-05-17.
 
 Objetivo: transformar o clique em um agente em um painel util, mostrando dados reais carregados pelo backend local.
 
@@ -145,4 +145,4 @@ Critérios de aceite:
 
 ## Proxima etapa autorizada
 
-Etapa 2 em 2026-05-20: Painel de agente com dados reais.
+Etapa 3: Chat local com agente escolhido. Requer confirmacao explicita antes de implementar, porque envolve envio de mensagens para agentes e guardrails de permissao.

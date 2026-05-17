@@ -26,18 +26,16 @@ const AVATARS = [
   '/assets/avatars/avatar3.png',
 ];
 
+const OPENCLAW_CONFIG_PATH = '/home/helinton/.openclaw/openclaw.json';
+
 function avatarFor(agentId: string) {
   const hash = [...agentId].reduce((sum, char) => sum + char.charCodeAt(0), 0);
   return AVATARS[hash % AVATARS.length];
 }
 
-function configPath() {
-  return process.env.OPENCLAW_CONFIG_PATH || '/home/helinton/.openclaw/openclaw.json';
-}
-
 export async function GET() {
   try {
-    const rawConfig = await readFile(configPath(), 'utf8');
+    const rawConfig = await readFile(OPENCLAW_CONFIG_PATH, 'utf8');
     const config = JSON.parse(rawConfig) as OpenClawConfig;
     const agents = (config.agents?.list || [])
       .filter(agent => agent.id)

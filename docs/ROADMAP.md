@@ -71,7 +71,7 @@ Critérios de aceite:
 
 ### 4. Tasks e execucoes
 
-Status: pendente.
+Status: corte read-only feito em 2026-05-17; criacao de task ainda pendente.
 
 Objetivo: criar uma aba operacional para acompanhar tarefas e execucoes recentes.
 

@@ -55,6 +55,7 @@ function StatusPill({ status }: { status: TaskStatus }) {
 export function TasksPanel() {
   const [payload, setPayload] = useState<TasksResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -86,7 +87,7 @@ export function TasksPanel() {
 
   return (
     <section className="mb-4 border-2 border-[#2d3748] bg-[#111827] p-3">
-      <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className={`flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between ${isOpen ? 'mb-3' : ''}`}>
         <div>
           <p className="text-[10px] uppercase tracking-[0.18em] text-violet-300/80">Read-only task monitor</p>
           <h2 className="text-xl font-bold uppercase leading-none text-slate-100">TASKS</h2>
@@ -94,9 +95,27 @@ export function TasksPanel() {
         <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase text-slate-500">
           <span>{payload ? payload.shown + '/' + payload.totalTracked + ' shown' : 'loading'}</span>
           <span>Updated {formatTime(payload?.generatedAt)}</span>
+          <button
+            type="button"
+            onClick={() => setIsOpen(value => !value)}
+            className="border border-violet-500/50 bg-violet-950/30 px-2 py-1 font-bold text-violet-200 hover:border-violet-300 hover:text-white"
+            aria-expanded={isOpen}
+          >
+            {isOpen ? 'HIDE' : 'OPEN'}
+          </button>
         </div>
       </div>
 
+      {!isOpen && (
+        <div className="mt-2 flex flex-wrap gap-2 text-[10px] uppercase text-slate-500">
+          <span className="border border-slate-800 bg-black/30 px-2 py-1">completed {counts?.completed ?? 0}</span>
+          <span className="border border-slate-800 bg-black/30 px-2 py-1">running {counts?.running ?? 0}</span>
+          <span className="border border-slate-800 bg-black/30 px-2 py-1">failed {counts?.failed ?? 0}</span>
+        </div>
+      )}
+
+      {isOpen && (
+        <>
       {error && (
         <div className="border border-red-500/50 bg-red-950/20 p-2 text-xs text-red-200">
           Tasks unavailable: {error}
@@ -137,6 +156,8 @@ export function TasksPanel() {
           <p className="border border-slate-800 bg-black/30 p-3 text-xs text-slate-500">No tracked tasks found.</p>
         )}
       </div>
+        </>
+      )}
     </section>
   );
 }

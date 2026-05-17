@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAgentStore } from '@/store/useAgentStore';
 import { RoomCard } from './RoomCard';
 import { ROOMS } from '@/config/constants';
+import { ObservabilityPanel } from './ObservabilityPanel';
 
 export function OfficeGrid() {
   const [clock, setClock] = useState('');
@@ -59,6 +60,8 @@ export function OfficeGrid() {
           </div>
         </div>
       </div>
+
+      <ObservabilityPanel />
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         <div className="flex flex-col gap-4 xl:col-span-5">

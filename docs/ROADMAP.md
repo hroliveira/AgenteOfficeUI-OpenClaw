@@ -127,7 +127,7 @@ Critérios de aceite:
 
 ### 7. Observabilidade
 
-Status: pendente.
+Status: feito em 2026-05-17.
 
 Objetivo: mostrar saude operacional sem transformar a UI em painel tecnico demais.
 

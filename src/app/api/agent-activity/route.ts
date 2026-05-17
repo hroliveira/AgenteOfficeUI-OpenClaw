@@ -132,6 +132,14 @@ function taskStatus(status?: string): ActivityStatus {
   return 'recent';
 }
 
+function taskSummary(task: RawTask) {
+  if (task.label) return cleanText(task.label);
+  const terminalSummary = cleanText(task.terminalSummary, 80);
+  if (terminalSummary && !terminalSummary.startsWith('[')) return terminalSummary;
+  const rawStatus = cleanText(task.status || 'task', 40);
+  return rawStatus === 'unknown' ? 'Task activity' : `Task ${rawStatus}`;
+}
+
 function scheduleStatus(job: RawSchedule): ActivityStatus {
   const raw = job.status || job.state?.lastStatus || job.state?.lastRunStatus || 'idle';
   if (raw === 'running' || job.state?.runningAtMs) return 'running';
@@ -154,7 +162,7 @@ function taskActivity(task: RawTask): Activity | null {
     rawStatus: cleanText(task.status || 'unknown', 40),
     at: iso(timestamp),
     timestamp,
-    summary: cleanText(task.label || task.terminalSummary || task.task || 'Task activity'),
+    summary: taskSummary(task),
   };
 }
 

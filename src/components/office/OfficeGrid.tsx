@@ -7,6 +7,7 @@ import { ROOMS } from '@/config/constants';
 import { ObservabilityPanel } from './ObservabilityPanel';
 import { TasksPanel } from './TasksPanel';
 import { SchedulePanel } from './SchedulePanel';
+import { AgentActivityPanel } from './AgentActivityPanel';
 
 export function OfficeGrid() {
   const [clock, setClock] = useState('');
@@ -64,6 +65,7 @@ export function OfficeGrid() {
       </div>
 
       <ObservabilityPanel />
+      <AgentActivityPanel />
       <TasksPanel />
       <SchedulePanel />
 

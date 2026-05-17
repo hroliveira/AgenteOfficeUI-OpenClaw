@@ -50,7 +50,26 @@ Critérios de aceite:
 - Nenhum token, secret ou caminho sensivel desnecessario aparece no browser.
 - `npm run lint` e `npm run build` passam.
 
-### 3. Chat local com agente escolhido
+### 3. Agent Activity read-only
+
+Status: feito em 2026-05-17.
+
+Objetivo: mostrar o que cada agente esta fazendo ou fez recentemente sem permitir comandos pela UI.
+
+Entregaveis:
+
+- Rota local `/api/agent-activity` agregando tasks, sessions e schedule.
+- Painel `AGENT ACTIVITY` recolhido por padrao.
+- Status derivado por agente: running, recent, idle ou error.
+- Sanitizacao de summaries para nao expor tokens, session keys, URLs ou payloads completos.
+
+Critérios de aceite:
+
+- Um card por agente principal: Lilith, Tomas, Cecilia, Maya, Daikokuten e Ariel.
+- Ultima atividade mostra fonte, horario, resumo curto e status.
+- `npm run lint` e `npm run build` passam.
+
+### 4. Chat local com agente escolhido
 
 Status: pendente.
 
@@ -69,7 +88,7 @@ Critérios de aceite:
 - O browser nao recebe token do gateway.
 - Erros de permissao ou agente indisponivel aparecem de forma legivel.
 
-### 4. Tasks e execucoes
+### 5. Tasks e execucoes
 
 Status: corte read-only feito em 2026-05-17; criacao de task ainda pendente.
 
@@ -88,7 +107,7 @@ Critérios de aceite:
 - Tarefas longas nao travam a UI.
 - Falhas aparecem com mensagem curta e acionavel.
 
-### 5. Crons e lembretes
+### 6. Crons e lembretes
 
 Status: corte read-only feito em 2026-05-17; criacao de lembrete ainda pendente.
 
@@ -106,7 +125,7 @@ Critérios de aceite:
 - Usuario consegue criar um lembrete simples.
 - Agendamentos perigosos ou recorrentes exigem confirmacao.
 
-### 6. CRUD seguro de agentes
+### 7. CRUD seguro de agentes
 
 Status: pendente.
 
@@ -125,7 +144,7 @@ Critérios de aceite:
 - O app mostra o diff antes de aplicar mudancas.
 - Config invalida nao e salva.
 
-### 7. Observabilidade
+### 8. Observabilidade
 
 Status: feito em 2026-05-17.
 
@@ -145,4 +164,4 @@ Critérios de aceite:
 
 ## Proxima etapa autorizada
 
-Etapa 3: Chat local com agente escolhido. Requer confirmacao explicita antes de implementar, porque envolve envio de mensagens para agentes e guardrails de permissao.
+Etapa 4: Chat local com agente escolhido. Requer confirmacao explicita antes de implementar, porque envolve envio de mensagens para agentes e guardrails de permissao.

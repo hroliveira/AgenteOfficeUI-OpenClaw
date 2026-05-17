@@ -4,12 +4,7 @@ import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useAgentStore } from '@/store/useAgentStore';
-
-const AVAILABLE_AVATARS = [
-  '/assets/avatars/avatar1.png',
-  '/assets/avatars/avatar2.png',
-  '/assets/avatars/avatar3.png',
-];
+import { AVATAR_OPTIONS } from '@/config/avatars';
 
 function InfoRow({ label, value }: { label: string; value?: string | null }) {
   return (
@@ -79,7 +74,7 @@ export function AgentInspector() {
 
               {showAvatarPicker && (
                 <div className="absolute left-0 top-full z-[110] mt-2 flex gap-2 border-2 border-[#2d3748] bg-[#1a1f2c] p-2 shadow-xl">
-                  {AVAILABLE_AVATARS.map(av => (
+                  {AVATAR_OPTIONS.map(av => (
                     <button
                       key={av}
                       type="button"

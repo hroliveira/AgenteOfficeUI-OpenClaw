@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Agent, AgentStatus, RoomId } from '@/types/agent';
 import { AGENT_NAMES, ROOM_IDS } from '@/config/constants';
+import { AVATAR_OPTIONS } from '@/config/avatars';
 
 interface Message {
   id: string;
@@ -74,8 +75,7 @@ function randomPosition() {
 }
 
 function randomAvatar() {
-  const avatars = ['/assets/avatars/avatar1.png', '/assets/avatars/avatar2.png', '/assets/avatars/avatar3.png'];
-  return avatars[Math.floor(Math.random() * avatars.length)];
+  return AVATAR_OPTIONS[Math.floor(Math.random() * AVATAR_OPTIONS.length)];
 }
 
 function humanizeName(id: string): string {

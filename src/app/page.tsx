@@ -15,7 +15,7 @@ export default function HomePage() {
     <main className="flex h-dvh w-screen flex-col overflow-hidden bg-[#0b0e14] font-pixel select-none md:flex-row">
       <WebSocketInit />
 
-      <div className="h-[42dvh] w-full flex-shrink-0 border-b-4 border-[#2d3748] md:h-full md:w-72 md:border-b-0 md:border-r-4">
+      <div className="h-[42dvh] w-full flex-shrink-0 border-b-4 border-[#2d3748] md:h-full md:w-64 md:border-b-0 md:border-r-4">
         <Sidebar />
       </div>
 

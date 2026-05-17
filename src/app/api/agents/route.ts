@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { NextResponse } from 'next/server';
+import { avatarForAgent } from '@/config/avatars';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -30,19 +31,8 @@ type OpenClawConfig = {
   };
 };
 
-const AVATARS = [
-  '/assets/avatars/avatar1.png',
-  '/assets/avatars/avatar2.png',
-  '/assets/avatars/avatar3.png',
-];
-
 const OPENCLAW_CONFIG_PATH = '/home/helinton/.openclaw/openclaw.json';
 const HOME_PATH = '/home/helinton';
-
-function avatarFor(agentId: string) {
-  const hash = [...agentId].reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  return AVATARS[hash % AVATARS.length];
-}
 
 function displayPath(path?: string) {
   if (!path) return undefined;
@@ -66,7 +56,7 @@ export async function GET() {
         id: agent.id!,
         name: agent.identity?.name || agent.name || agent.id!,
         status: 'idle',
-        avatar: avatarFor(agent.id!),
+        avatar: avatarForAgent(agent.id!),
         description: agent.identity?.theme || '',
         emoji: agent.identity?.emoji || '',
         workspace: displayPath(agent.workspace || agent.cwd),

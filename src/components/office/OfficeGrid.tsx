@@ -4,10 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAgentStore } from '@/store/useAgentStore';
 import { RoomCard } from './RoomCard';
 import { ROOMS } from '@/config/constants';
-import { ObservabilityPanel } from './ObservabilityPanel';
-import { TasksPanel } from './TasksPanel';
-import { SchedulePanel } from './SchedulePanel';
-import { AgentActivityPanel } from './AgentActivityPanel';
+import { OperationsTabs } from './OperationsTabs';
 
 export function OfficeGrid() {
   const [clock, setClock] = useState('');
@@ -64,10 +61,7 @@ export function OfficeGrid() {
         </div>
       </div>
 
-      <ObservabilityPanel />
-      <AgentActivityPanel />
-      <TasksPanel />
-      <SchedulePanel />
+      <OperationsTabs />
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         <div className="flex flex-col gap-4 xl:col-span-5">

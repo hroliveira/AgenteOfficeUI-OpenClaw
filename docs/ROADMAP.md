@@ -90,7 +90,7 @@ Critérios de aceite:
 
 ### 5. Crons e lembretes
 
-Status: pendente.
+Status: corte read-only feito em 2026-05-17; criacao de lembrete ainda pendente.
 
 Objetivo: permitir visualizar e criar lembretes/tarefas recorrentes de forma segura.
 

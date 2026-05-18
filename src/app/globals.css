@@ -49,6 +49,220 @@ body {
   background-size: 32px 32px;
 }
 
+.rpg-map-shell {
+  border: 4px solid #2d3748;
+  background: #070a10;
+  box-shadow:
+    inset -4px -4px 0 #000,
+    inset 4px 4px 0 #334155,
+    4px 4px 0 rgba(0, 0, 0, 0.45);
+  overflow: auto;
+  padding: 12px;
+}
+
+.rpg-map {
+  position: relative;
+  min-width: 820px;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background-color: #101827;
+  background-image:
+    linear-gradient(45deg, rgba(45, 55, 72, 0.5) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(45, 55, 72, 0.5) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(45, 55, 72, 0.5) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(45, 55, 72, 0.5) 75%);
+  background-position: 0 0, 0 16px, 16px -16px, -16px 0;
+  background-size: 32px 32px;
+}
+
+.rpg-corridor {
+  position: absolute;
+  background:
+    linear-gradient(90deg, rgba(15, 23, 42, 0.3), rgba(51, 65, 85, 0.4), rgba(15, 23, 42, 0.3)),
+    repeating-linear-gradient(90deg, #1e293b 0 14px, #273449 14px 28px);
+  border: 2px solid #334155;
+  box-shadow: inset 0 0 0 2px #0f172a;
+}
+
+.rpg-corridor-main {
+  left: 47%;
+  top: 22%;
+  width: 6%;
+  height: 50%;
+}
+
+.rpg-corridor-left {
+  left: 23%;
+  top: 43%;
+  width: 54%;
+  height: 6%;
+}
+
+.rpg-corridor-right {
+  left: 49%;
+  top: 76%;
+  width: 28%;
+  height: 6%;
+}
+
+.rpg-corridor-bottom {
+  left: 23%;
+  top: 76%;
+  width: 28%;
+  height: 6%;
+}
+
+.rpg-room {
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+  border: 4px solid #334155;
+  background: #172033;
+  box-shadow:
+    inset -4px -4px 0 rgba(0, 0, 0, 0.45),
+    inset 4px 4px 0 rgba(148, 163, 184, 0.15),
+    0 8px 0 rgba(0, 0, 0, 0.35);
+  color: #e2e8f0;
+  text-align: left;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.rpg-room:hover,
+.rpg-room:focus-visible {
+  border-color: #22d3ee;
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.rpg-room-floor,
+.rpg-focus-floor::before {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 18px 18px;
+  opacity: 0.9;
+}
+
+.rpg-focus-floor::before {
+  content: '';
+}
+
+.rpg-room-header {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 7px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #f8fafc;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.rpg-room-light {
+  display: block;
+  height: 8px;
+  width: 8px;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.65);
+}
+
+.rpg-room-count {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  z-index: 4;
+  color: #94a3b8;
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+.rpg-room-command { border-color: #0891b2; }
+.rpg-room-dev { border-color: #2563eb; }
+.rpg-room-qa { border-color: #7c3aed; }
+.rpg-room-market { border-color: #db2777; }
+.rpg-room-finance { border-color: #ca8a04; }
+.rpg-room-ops { border-color: #059669; }
+.rpg-room-shared { border-color: #64748b; }
+
+.agent-sprite {
+  position: absolute;
+  z-index: 8;
+  display: grid;
+  height: 52px;
+  width: 46px;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  color: #fff;
+}
+
+.agent-sprite-body {
+  position: relative;
+  z-index: 2;
+  display: block;
+  height: 34px;
+  width: 34px;
+  overflow: hidden;
+  border: 2px solid #0f172a;
+  background: #020617;
+  clip-path: polygon(18% 10%, 82% 10%, 82% 76%, 66% 76%, 66% 100%, 34% 100%, 34% 76%, 18% 76%);
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.agent-sprite:hover .agent-sprite-body,
+.agent-sprite:focus-visible .agent-sprite-body,
+.agent-sprite-selected .agent-sprite-body {
+  border-color: #f8fafc;
+  transform: translateY(-2px);
+}
+
+.agent-sprite-shadow {
+  position: absolute;
+  bottom: 8px;
+  z-index: 1;
+  height: 7px;
+  width: 34px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  filter: blur(1px);
+}
+
+.agent-sprite-status {
+  position: absolute;
+  right: 3px;
+  top: 6px;
+  z-index: 3;
+  height: 8px;
+  width: 8px;
+  border: 1px solid #020617;
+}
+
+.agent-sprite-label {
+  position: absolute;
+  left: 50%;
+  top: 42px;
+  z-index: 4;
+  max-width: 84px;
+  transform: translateX(-50%);
+  overflow: hidden;
+  border: 1px solid #334155;
+  background: rgba(2, 6, 23, 0.9);
+  padding: 1px 4px;
+  color: #f8fafc;
+  font-size: 0.58rem;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .pixel-stat {
   border: 2px solid #2d3748;
   background: #151921;

@@ -5,9 +5,13 @@ import { useAgentStore } from '@/store/useAgentStore';
 import { RoomCard } from './RoomCard';
 import { ROOMS } from '@/config/constants';
 import { OperationsTabs } from './OperationsTabs';
+import { RpgMap } from '@/components/map/RpgMap';
+
+type ViewMode = 'grid' | 'map';
 
 export function OfficeGrid() {
   const [clock, setClock] = useState('');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const agentsById = useAgentStore(s => s.agents);
   const connectionStatus = useAgentStore(s => s.connectionStatus);
   const agents = useMemo(() => Object.values(agentsById), [agentsById]);
@@ -63,19 +67,39 @@ export function OfficeGrid() {
 
       <OperationsTabs />
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
-        <div className="flex flex-col gap-4 xl:col-span-5">
-          {largeRooms.map(room => (
-            <RoomCard key={room.id} room={room} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:col-span-7">
-          {smallRooms.map(room => (
-            <RoomCard key={room.id} room={room} />
+      <div className="mb-4 flex items-center justify-between gap-3 border-2 border-[#2d3748] bg-[#111827] p-2">
+        <span className="text-xs uppercase tracking-[0.16em] text-slate-500">Office View</span>
+        <div className="grid grid-cols-2 border-2 border-[#2d3748] bg-[#0b0e14] p-1 text-xs uppercase">
+          {(['grid', 'map'] as const).map(mode => (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => setViewMode(mode)}
+              className={`px-3 py-1 leading-none transition-colors ${viewMode === mode ? 'bg-cyan-400 text-black' : 'text-slate-400 hover:text-white'}`}
+            >
+              {mode}
+            </button>
           ))}
         </div>
       </div>
+
+      {viewMode === 'map' ? (
+        <RpgMap />
+      ) : (
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+          <div className="flex flex-col gap-4 xl:col-span-5">
+            {largeRooms.map(room => (
+              <RoomCard key={room.id} room={room} />
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:col-span-7">
+            {smallRooms.map(room => (
+              <RoomCard key={room.id} room={room} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

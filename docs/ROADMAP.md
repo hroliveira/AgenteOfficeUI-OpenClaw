@@ -164,7 +164,7 @@ Critérios de aceite:
 
 ### 9. Cenario RPG / mapa expansivel
 
-Status: planejado; aguardando revisao do Toshyro.
+Status: primeiro corte implementado em 2026-05-18.
 
 Objetivo: evoluir o cenario visual para um mapa estilo RPG com visao geral, salas expansivas e agentes como personagens.
 
@@ -180,12 +180,16 @@ Entregaveis previstos:
 - Agentes renderizados como personagens/sprites em vez de imagens circulares flutuantes.
 - Caminho inicial recomendado: prototipo React/CSS antes de Phaser/Tiled.
 
-Criterios de aceite:
+Critérios de aceite:
 
-- Toshyro revisa e aprova direcao visual antes de implementar.
+- Toggle Grid / Map disponivel.
+- Mapa top-down renderiza salas conectadas.
+- Cada agente aparece dentro da sala operacional correspondente.
+- Clique em sala abre modo foco.
+- Clique em agente abre o inspector atual.
 - Modo mapa nao quebra o cockpit operacional atual.
-- npm run lint e npm run build passam quando implementado.
+- npm run lint e npm run build passam.
 
 ## Proxima etapa autorizada
 
-Etapa 4: Chat local com agente escolhido. Requer confirmacao explicita antes de implementar, porque envolve envio de mensagens para agentes e guardrails de permissao.
+Próxima etapa recomendada: lapidar o cenário RPG após teste humano, ajustando proporção, legibilidade e sprites antes de avançar para chat local.

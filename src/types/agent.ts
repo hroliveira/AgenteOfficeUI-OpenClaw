@@ -31,6 +31,18 @@ export interface Agent {
   skills?: string[];
 }
 
+export interface MapRoom {
+  id: RoomId;
+  label: string;
+  shortLabel: string;
+  description: string;
+  theme: 'command' | 'dev' | 'qa' | 'market' | 'finance' | 'ops' | 'shared';
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export type AgentEventType =
   | 'agent.started'
   | 'agent.finished'

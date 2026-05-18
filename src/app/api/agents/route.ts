@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { NextResponse } from 'next/server';
 import { avatarForAgent } from '@/config/avatars';
+import { roomForAgent } from '@/config/mapLayout';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -56,6 +57,7 @@ export async function GET() {
         id: agent.id!,
         name: agent.identity?.name || agent.name || agent.id!,
         status: 'idle',
+        room: roomForAgent(agent.id!),
         avatar: avatarForAgent(agent.id!),
         description: agent.identity?.theme || '',
         emoji: agent.identity?.emoji || '',

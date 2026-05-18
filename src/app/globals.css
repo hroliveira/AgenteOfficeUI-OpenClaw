@@ -77,11 +77,9 @@ body {
   position: absolute;
   z-index: 2;
   overflow: hidden;
-  border: 2px solid rgba(148, 163, 184, 0.12);
-  background: rgba(8, 13, 23, 0.04);
-  box-shadow:
-    inset 0 0 0 1px rgba(2, 6, 23, 0.45),
-    0 0 0 1px rgba(2, 6, 23, 0.35);
+  border: 1px solid transparent;
+  background: transparent;
+  box-shadow: none;
   color: #e2e8f0;
   text-align: left;
   transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
@@ -90,10 +88,10 @@ body {
 .rpg-room:hover,
 .rpg-room:focus-visible {
   border-color: #22d3ee;
-  background: rgba(8, 145, 178, 0.14);
+  background: rgba(8, 145, 178, 0.07);
   box-shadow:
-    inset 0 0 0 1px rgba(103, 232, 249, 0.35),
-    0 0 22px rgba(34, 211, 238, 0.28);
+    inset 0 0 0 1px rgba(103, 232, 249, 0.18),
+    0 0 16px rgba(34, 211, 238, 0.2);
   outline: none;
   transform: translateY(-2px);
 }
@@ -126,8 +124,8 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  border: 1px solid rgba(51, 65, 85, 0.7);
-  background: rgba(2, 6, 23, 0.7);
+  border: 1px solid rgba(51, 65, 85, 0.38);
+  background: rgba(2, 6, 23, 0.48);
   color: #f8fafc;
   font-size: 0.85rem;
   font-weight: 700;
@@ -135,6 +133,14 @@ body {
   text-transform: uppercase;
   text-shadow: 0 2px 6px #020617;
   padding: 3px 5px;
+  opacity: 0.38;
+  transition: opacity 160ms ease, background 160ms ease;
+}
+
+.rpg-room:hover .rpg-room-header,
+.rpg-room:focus-visible .rpg-room-header {
+  background: rgba(2, 6, 23, 0.76);
+  opacity: 1;
 }
 
 .rpg-room-light {
@@ -150,13 +156,20 @@ body {
   bottom: 6px;
   right: 8px;
   z-index: 4;
-  border: 1px solid rgba(51, 65, 85, 0.7);
-  background: rgba(2, 6, 23, 0.68);
+  border: 1px solid rgba(51, 65, 85, 0.36);
+  background: rgba(2, 6, 23, 0.45);
   color: #cbd5e1;
   font-size: 0.65rem;
   line-height: 1;
   padding: 2px 4px;
   text-shadow: 0 2px 6px #020617;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.rpg-room:hover .rpg-room-count,
+.rpg-room:focus-visible .rpg-room-count {
+  opacity: 1;
 }
 
 .rpg-room-command { border-color: rgba(8, 145, 178, 0.28); }
@@ -171,41 +184,46 @@ body {
   position: absolute;
   z-index: 8;
   display: grid;
-  height: 58px;
-  width: 52px;
+  height: 70px;
+  width: 62px;
   place-items: center;
   transform: translate(-50%, -50%);
   color: #fff;
 }
 
-.agent-sprite-body {
+.agent-sprite-walker {
+  position: relative;
+  display: grid;
+  height: 70px;
+  width: 62px;
+  place-items: center;
+  animation: agent-patrol 7.5s ease-in-out infinite;
+  animation-delay: var(--walk-delay, 0s);
+}
+
+.agent-sprite-person {
   position: relative;
   z-index: 2;
   display: block;
-  height: 39px;
-  width: 32px;
-  overflow: hidden;
-  border: 2px solid #020617;
-  background:
-    linear-gradient(180deg, rgba(34, 211, 238, 0.28), rgba(15, 23, 42, 0.95)),
-    #020617;
-  border-radius: 14px 14px 6px 6px;
-  transition: transform 160ms ease, border-color 160ms ease;
+  height: 43px;
+  width: 25px;
+  transform-origin: center bottom;
+  animation: agent-step 0.72s steps(2, end) infinite;
+  animation-delay: var(--walk-delay, 0s);
 }
 
-.agent-sprite:hover .agent-sprite-body,
-.agent-sprite:focus-visible .agent-sprite-body,
-.agent-sprite-selected .agent-sprite-body {
-  border-color: #f8fafc;
-  transform: translateY(-2px);
+.agent-sprite:hover .agent-sprite-person,
+.agent-sprite:focus-visible .agent-sprite-person,
+.agent-sprite-selected .agent-sprite-person {
+  filter: drop-shadow(0 0 8px rgba(248, 250, 252, 0.85));
 }
 
 .agent-sprite-shadow {
   position: absolute;
-  bottom: 9px;
+  bottom: 10px;
   z-index: 1;
   height: 7px;
-  width: 38px;
+  width: 34px;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.45);
   filter: blur(1px);
@@ -213,18 +231,19 @@ body {
 
 .agent-sprite-status {
   position: absolute;
-  right: 5px;
-  top: 6px;
+  right: 8px;
+  top: 10px;
   z-index: 3;
   height: 8px;
   width: 8px;
   border: 1px solid #020617;
+  background: #64748b;
 }
 
 .agent-sprite-label {
   position: absolute;
   left: 50%;
-  top: 45px;
+  top: 55px;
   z-index: 4;
   max-width: 84px;
   transform: translateX(-50%);
@@ -238,6 +257,117 @@ body {
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.agent-sprite-head {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  z-index: 3;
+  height: 23px;
+  width: 23px;
+  transform: translateX(-50%);
+  overflow: hidden;
+  border: 2px solid #020617;
+  border-radius: 999px;
+  background: #111827;
+}
+
+.agent-sprite-torso {
+  position: absolute;
+  left: 50%;
+  top: 21px;
+  z-index: 2;
+  height: 18px;
+  width: 18px;
+  transform: translateX(-50%);
+  border: 2px solid #020617;
+  border-radius: 6px 6px 4px 4px;
+  background: linear-gradient(180deg, rgba(34, 211, 238, 0.78), #172554);
+}
+
+.agent-sprite-arm,
+.agent-sprite-leg {
+  position: absolute;
+  z-index: 1;
+  width: 6px;
+  border: 1px solid #020617;
+  background: #1e40af;
+}
+
+.agent-sprite-arm {
+  top: 24px;
+  height: 15px;
+  border-radius: 4px;
+}
+
+.agent-sprite-arm-left {
+  left: 1px;
+  transform: rotate(14deg);
+}
+
+.agent-sprite-arm-right {
+  right: 1px;
+  transform: rotate(-14deg);
+}
+
+.agent-sprite-leg {
+  top: 37px;
+  height: 13px;
+  border-radius: 0 0 4px 4px;
+}
+
+.agent-sprite-leg-left {
+  left: 7px;
+}
+
+.agent-sprite-leg-right {
+  right: 7px;
+}
+
+.agent-sprite-working .agent-sprite-torso,
+.agent-sprite-working .agent-sprite-arm,
+.agent-sprite-working .agent-sprite-leg {
+  background: #047857;
+}
+
+.agent-sprite-busy .agent-sprite-torso,
+.agent-sprite-busy .agent-sprite-arm,
+.agent-sprite-busy .agent-sprite-leg {
+  background: #6d28d9;
+}
+
+.agent-sprite-error .agent-sprite-torso,
+.agent-sprite-error .agent-sprite-arm,
+.agent-sprite-error .agent-sprite-leg {
+  background: #b91c1c;
+}
+
+.agent-sprite-working + .agent-sprite-status {
+  background: #34d399;
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.85);
+}
+
+.agent-sprite-busy + .agent-sprite-status {
+  background: #a78bfa;
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.85);
+}
+
+.agent-sprite-error + .agent-sprite-status {
+  background: #f87171;
+  box-shadow: 0 0 10px rgba(248, 113, 113, 0.85);
+}
+
+@keyframes agent-patrol {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(var(--patrol-x), 0); }
+  50% { transform: translate(var(--patrol-x), var(--patrol-y)); }
+  75% { transform: translate(0, var(--patrol-y)); }
+}
+
+@keyframes agent-step {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-2px) rotate(1deg); }
 }
 
 .rpg-focus-bg {

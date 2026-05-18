@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import type { CSSProperties } from 'react';
 import { memo } from 'react';
 import { Agent } from '@/types/agent';
 import { useAgentStore } from '@/store/useAgentStore';
@@ -14,10 +15,10 @@ interface AgentSpriteProps {
 }
 
 const STATUS_CLASS: Record<Agent['status'], string> = {
-  idle: 'bg-slate-500',
-  working: 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]',
-  busy: 'bg-violet-400 shadow-[0_0_10px_rgba(167,139,250,0.8)]',
-  error: 'bg-red-400 shadow-[0_0_10px_rgba(248,113,113,0.8)]',
+  idle: 'agent-sprite-idle',
+  working: 'agent-sprite-working',
+  busy: 'agent-sprite-busy',
+  error: 'agent-sprite-error',
 };
 
 export const AgentSprite = memo(function AgentSprite({ agent, index, total, anchorX = 50, anchorY = 56 }: AgentSpriteProps) {
@@ -28,6 +29,15 @@ export const AgentSprite = memo(function AgentSprite({ agent, index, total, anch
   const row = Math.floor(index / columns);
   const x = anchorX + (col - (columns - 1) / 2) * 18;
   const y = anchorY + row * 19;
+  const patrolX = ((agent.id.length + index) % 2 === 0 ? 1 : -1) * (5 + (agent.id.length % 4));
+  const patrolY = ((agent.name.length + index) % 2 === 0 ? 1 : -1) * (3 + (agent.name.length % 3));
+  const spriteStyle = {
+    left: `${Math.max(12, Math.min(x, 88))}%`,
+    top: `${Math.max(22, Math.min(y, 82))}%`,
+    '--patrol-x': `${patrolX}px`,
+    '--patrol-y': `${patrolY}px`,
+    '--walk-delay': `-${(agent.id.length + index) % 7}s`,
+  } as CSSProperties;
 
   return (
     <button
@@ -37,21 +47,30 @@ export const AgentSprite = memo(function AgentSprite({ agent, index, total, anch
         selectAgent(agent.id);
       }}
       className={`agent-sprite group ${isSelected ? 'agent-sprite-selected' : ''}`}
-      style={{ left: `${Math.max(12, Math.min(x, 88))}%`, top: `${Math.max(22, Math.min(y, 82))}%` }}
+      style={spriteStyle}
       aria-label={`Open ${agent.name}`}
     >
-      <span className="agent-sprite-shadow" />
-      <span className="agent-sprite-body">
-        <Image
-          src={agent.avatar}
-          alt=""
-          width={44}
-          height={44}
-          className="h-full w-full object-cover pixelated"
-        />
+      <span className="agent-sprite-walker">
+        <span className="agent-sprite-shadow" />
+        <span className={`agent-sprite-person ${STATUS_CLASS[agent.status]}`}>
+          <span className="agent-sprite-head">
+            <Image
+              src={agent.avatar}
+              alt=""
+              width={24}
+              height={24}
+              className="h-full w-full object-cover pixelated"
+            />
+          </span>
+          <span className="agent-sprite-torso" />
+          <span className="agent-sprite-arm agent-sprite-arm-left" />
+          <span className="agent-sprite-arm agent-sprite-arm-right" />
+          <span className="agent-sprite-leg agent-sprite-leg-left" />
+          <span className="agent-sprite-leg agent-sprite-leg-right" />
+        </span>
+        <span className="agent-sprite-status" />
+        <span className="agent-sprite-label">{agent.name}</span>
       </span>
-      <span className={`agent-sprite-status ${STATUS_CLASS[agent.status]}`} />
-      <span className="agent-sprite-label">{agent.name}</span>
     </button>
   );
 });

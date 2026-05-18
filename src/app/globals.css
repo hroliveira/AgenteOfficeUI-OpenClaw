@@ -77,7 +77,7 @@ body {
   position: absolute;
   z-index: 2;
   overflow: hidden;
-  border: 2px solid rgba(148, 163, 184, 0.18);
+  border: 2px solid rgba(148, 163, 184, 0.12);
   background: rgba(8, 13, 23, 0.04);
   box-shadow:
     inset 0 0 0 1px rgba(2, 6, 23, 0.45),
@@ -126,12 +126,15 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  border: 1px solid rgba(51, 65, 85, 0.7);
+  background: rgba(2, 6, 23, 0.7);
   color: #f8fafc;
   font-size: 0.85rem;
   font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
   text-shadow: 0 2px 6px #020617;
+  padding: 3px 5px;
 }
 
 .rpg-room-light {
@@ -147,9 +150,12 @@ body {
   bottom: 6px;
   right: 8px;
   z-index: 4;
-  color: #94a3b8;
+  border: 1px solid rgba(51, 65, 85, 0.7);
+  background: rgba(2, 6, 23, 0.68);
+  color: #cbd5e1;
   font-size: 0.65rem;
   line-height: 1;
+  padding: 2px 4px;
   text-shadow: 0 2px 6px #020617;
 }
 
@@ -165,8 +171,8 @@ body {
   position: absolute;
   z-index: 8;
   display: grid;
-  height: 52px;
-  width: 46px;
+  height: 58px;
+  width: 52px;
   place-items: center;
   transform: translate(-50%, -50%);
   color: #fff;
@@ -176,12 +182,14 @@ body {
   position: relative;
   z-index: 2;
   display: block;
-  height: 34px;
-  width: 34px;
+  height: 39px;
+  width: 32px;
   overflow: hidden;
-  border: 2px solid #0f172a;
-  background: #020617;
-  clip-path: polygon(18% 10%, 82% 10%, 82% 76%, 66% 76%, 66% 100%, 34% 100%, 34% 76%, 18% 76%);
+  border: 2px solid #020617;
+  background:
+    linear-gradient(180deg, rgba(34, 211, 238, 0.28), rgba(15, 23, 42, 0.95)),
+    #020617;
+  border-radius: 14px 14px 6px 6px;
   transition: transform 160ms ease, border-color 160ms ease;
 }
 
@@ -194,10 +202,10 @@ body {
 
 .agent-sprite-shadow {
   position: absolute;
-  bottom: 8px;
+  bottom: 9px;
   z-index: 1;
   height: 7px;
-  width: 34px;
+  width: 38px;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.45);
   filter: blur(1px);
@@ -205,7 +213,7 @@ body {
 
 .agent-sprite-status {
   position: absolute;
-  right: 3px;
+  right: 5px;
   top: 6px;
   z-index: 3;
   height: 8px;
@@ -216,13 +224,13 @@ body {
 .agent-sprite-label {
   position: absolute;
   left: 50%;
-  top: 42px;
+  top: 45px;
   z-index: 4;
   max-width: 84px;
   transform: translateX(-50%);
   overflow: hidden;
   border: 1px solid #334155;
-  background: rgba(2, 6, 23, 0.9);
+  background: rgba(2, 6, 23, 0.94);
   padding: 1px 4px;
   color: #f8fafc;
   font-size: 0.58rem;
@@ -230,6 +238,38 @@ body {
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.rpg-focus-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(2, 6, 23, 0.08), rgba(2, 6, 23, 0.22)),
+    url('/assets/maps/agent-office-rpg-map-bg.png');
+  background-repeat: no-repeat;
+  background-size: 220%;
+  filter: saturate(1.08);
+}
+
+.rpg-focus-description {
+  border: 1px solid rgba(51, 65, 85, 0.75);
+  background: rgba(2, 6, 23, 0.78);
+  padding: 8px 10px;
+  text-shadow: 0 2px 6px #020617;
+}
+
+@media (max-width: 767px) {
+  .rpg-map-shell {
+    padding: 8px;
+  }
+
+  .rpg-map {
+    min-width: 680px;
+  }
+
+  .rpg-room-header {
+    font-size: 0.7rem;
+  }
 }
 
 .pixel-stat {

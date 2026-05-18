@@ -40,7 +40,14 @@ export const RpgRoom = memo(function RpgRoom({ room, agents, onFocus }: RpgRoomP
       <span className="rpg-room-count">{agents.length} AG</span>
 
       {agents.map((agent, index) => (
-        <AgentSprite key={agent.id} agent={agent} index={index} total={agents.length} />
+        <AgentSprite
+          key={agent.id}
+          agent={agent}
+          index={index}
+          total={agents.length}
+          anchorX={room.agentX}
+          anchorY={room.agentY}
+        />
       ))}
     </button>
   );

@@ -11,6 +11,8 @@ export const MAP_ROOMS: MapRoom[] = [
     y: 5,
     w: 39,
     h: 32,
+    agentX: 58,
+    agentY: 62,
   },
   {
     id: 'claw',
@@ -22,6 +24,8 @@ export const MAP_ROOMS: MapRoom[] = [
     y: 70,
     w: 35,
     h: 24,
+    agentX: 58,
+    agentY: 54,
   },
   {
     id: 'sentinel',
@@ -33,6 +37,8 @@ export const MAP_ROOMS: MapRoom[] = [
     y: 43,
     w: 35,
     h: 21,
+    agentX: 58,
+    agentY: 56,
   },
   {
     id: 'pixel',
@@ -44,6 +50,8 @@ export const MAP_ROOMS: MapRoom[] = [
     y: 43,
     w: 35,
     h: 24,
+    agentX: 52,
+    agentY: 54,
   },
   {
     id: 'atlas',
@@ -55,6 +63,8 @@ export const MAP_ROOMS: MapRoom[] = [
     y: 5,
     w: 36,
     h: 31,
+    agentX: 51,
+    agentY: 58,
   },
   {
     id: 'conference',
@@ -66,6 +76,8 @@ export const MAP_ROOMS: MapRoom[] = [
     y: 72,
     w: 35,
     h: 22,
+    agentX: 50,
+    agentY: 48,
   },
   {
     id: 'kitchen',
@@ -77,6 +89,8 @@ export const MAP_ROOMS: MapRoom[] = [
     y: 58,
     w: 15,
     h: 25,
+    agentX: 50,
+    agentY: 58,
   },
 ];
 

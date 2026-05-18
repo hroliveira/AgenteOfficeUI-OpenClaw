@@ -34,11 +34,24 @@ export function RoomFocus({ room, agents, onClose }: RoomFocusProps) {
 
         <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto p-4 md:grid-cols-[1.35fr_0.65fr]">
           <section className="rpg-focus-floor relative min-h-[320px] overflow-hidden border-4 border-[#2d3748] bg-[#172033]">
+            <div
+              className="rpg-focus-bg"
+              style={{
+                backgroundPosition: `${Math.max(0, Math.min(room.x + room.w / 2, 100))}% ${Math.max(0, Math.min(room.y + room.h / 2, 100))}%`,
+              }}
+            />
             <div className="absolute left-4 top-4 max-w-[70%]">
-              <p className="text-sm leading-snug text-slate-300">{room.description}</p>
+              <p className="rpg-focus-description text-sm leading-snug text-slate-200">{room.description}</p>
             </div>
             {agents.map((agent, index) => (
-              <AgentSprite key={agent.id} agent={agent} index={index} total={agents.length} />
+              <AgentSprite
+                key={agent.id}
+                agent={agent}
+                index={index}
+                total={agents.length}
+                anchorX={room.agentX}
+                anchorY={room.agentY}
+              />
             ))}
             {!agents.length && (
               <div className="absolute inset-0 grid place-items-center text-sm uppercase tracking-widest text-slate-500">

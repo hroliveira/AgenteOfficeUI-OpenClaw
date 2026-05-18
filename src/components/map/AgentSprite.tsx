@@ -9,6 +9,8 @@ interface AgentSpriteProps {
   agent: Agent;
   index: number;
   total: number;
+  anchorX?: number;
+  anchorY?: number;
 }
 
 const STATUS_CLASS: Record<Agent['status'], string> = {
@@ -18,14 +20,14 @@ const STATUS_CLASS: Record<Agent['status'], string> = {
   error: 'bg-red-400 shadow-[0_0_10px_rgba(248,113,113,0.8)]',
 };
 
-export const AgentSprite = memo(function AgentSprite({ agent, index, total }: AgentSpriteProps) {
+export const AgentSprite = memo(function AgentSprite({ agent, index, total, anchorX = 50, anchorY = 56 }: AgentSpriteProps) {
   const selectAgent = useAgentStore(s => s.selectAgent);
   const isSelected = useAgentStore(s => s.selectedAgentId === agent.id);
   const columns = Math.max(1, Math.min(3, total));
   const col = index % columns;
   const row = Math.floor(index / columns);
-  const x = 22 + col * 28;
-  const y = 46 + row * 26;
+  const x = anchorX + (col - (columns - 1) / 2) * 18;
+  const y = anchorY + row * 19;
 
   return (
     <button
@@ -35,7 +37,7 @@ export const AgentSprite = memo(function AgentSprite({ agent, index, total }: Ag
         selectAgent(agent.id);
       }}
       className={`agent-sprite group ${isSelected ? 'agent-sprite-selected' : ''}`}
-      style={{ left: `${x}%`, top: `${Math.min(y, 78)}%` }}
+      style={{ left: `${Math.max(12, Math.min(x, 88))}%`, top: `${Math.max(22, Math.min(y, 82))}%` }}
       aria-label={`Open ${agent.name}`}
     >
       <span className="agent-sprite-shadow" />

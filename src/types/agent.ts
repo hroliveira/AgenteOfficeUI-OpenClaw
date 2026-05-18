@@ -41,6 +41,8 @@ export interface MapRoom {
   y: number;
   w: number;
   h: number;
+  agentX?: number;
+  agentY?: number;
 }
 
 export type AgentEventType =

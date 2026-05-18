@@ -34,6 +34,22 @@ O primeiro corte deve preservar o app atual e permitir alternar entre:
 - Office Grid atual;
 - RPG Map experimental.
 
+## Direcao visual aprovada
+
+Atualizacao em 2026-05-18: Toshyro trouxe uma referencia visual de mapa top-down estilo board game/miniature room, com composicao ortografica, paredes metalicas, piso modular, moveis detalhados e luz fria/quente.
+
+A direcao correta para os cenarios e:
+
+- fundo top-down rico, como mapa de tabuleiro/cenario tatico;
+- salas e corredores desenhados no proprio asset visual;
+- agentes, labels e interacoes como camada HTML por cima;
+- zonas clicaveis transparentes para nao esconder o cenario;
+- manter legibilidade operacional acima de decoracao.
+
+Primeiro asset integrado:
+
+- public/assets/maps/agent-office-rpg-map-bg.png
+
 ## Escopo do MVP - RPG Map Lite
 
 ### Experiencia

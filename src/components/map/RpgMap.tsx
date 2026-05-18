@@ -34,11 +34,6 @@ export function RpgMap() {
 
       <div className="rpg-map-shell">
         <div className="rpg-map">
-          <div className="rpg-corridor rpg-corridor-main" />
-          <div className="rpg-corridor rpg-corridor-left" />
-          <div className="rpg-corridor rpg-corridor-right" />
-          <div className="rpg-corridor rpg-corridor-bottom" />
-
           {MAP_ROOMS.map(room => (
             <RpgRoom
               key={room.id}

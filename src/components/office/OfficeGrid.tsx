@@ -8,10 +8,15 @@ import { OperationsTabs } from './OperationsTabs';
 import { RpgMap } from '@/components/map/RpgMap';
 
 type ViewMode = 'grid' | 'map';
+const VIEW_MODE_STORAGE_KEY = 'agent-office-view-mode';
 
 export function OfficeGrid() {
   const [clock, setClock] = useState('');
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    if (typeof window === 'undefined') return 'map';
+    const storedViewMode = window.localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+    return storedViewMode === 'grid' || storedViewMode === 'map' ? storedViewMode : 'map';
+  });
   const agentsById = useAgentStore(s => s.agents);
   const connectionStatus = useAgentStore(s => s.connectionStatus);
   const agents = useMemo(() => Object.values(agentsById), [agentsById]);
@@ -22,6 +27,11 @@ export function OfficeGrid() {
     const timer = setInterval(tick, 30_000);
     return () => clearInterval(timer);
   }, []);
+
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode);
+    window.localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
+  };
 
   const largeRooms = ROOMS.filter(r => r.size === 'large');
   const smallRooms = ROOMS.filter(r => r.size === 'small');
@@ -74,7 +84,7 @@ export function OfficeGrid() {
             <button
               key={mode}
               type="button"
-              onClick={() => setViewMode(mode)}
+              onClick={() => handleViewModeChange(mode)}
               className={`px-3 py-1 leading-none transition-colors ${viewMode === mode ? 'bg-cyan-400 text-black' : 'text-slate-400 hover:text-white'}`}
             >
               {mode}

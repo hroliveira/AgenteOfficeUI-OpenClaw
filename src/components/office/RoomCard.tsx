@@ -21,8 +21,8 @@ export const RoomCard = memo(function RoomCard({ room }: RoomCardProps) {
 
   const getDecorationImage = () => {
     switch (room.id) {
-      case 'conference': return '/assets/conference.png';
-      case 'jarvis': return '/assets/servers.png';
+      case 'conference': return '/assets/servers.png';
+      case 'jarvis': return '/assets/conference.png';
       case 'kitchen': return '/assets/kitchen.png';
       default: return null;
     }

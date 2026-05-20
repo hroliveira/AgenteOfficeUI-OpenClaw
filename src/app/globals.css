@@ -60,6 +60,14 @@ body {
   padding: 12px;
 }
 
+.rpg-map-shell-meeting {
+  border-color: #f59e0b;
+  box-shadow:
+    inset -4px -4px 0 #000,
+    inset 4px 4px 0 rgba(251, 191, 36, 0.42),
+    0 0 22px rgba(245, 158, 11, 0.18);
+}
+
 .rpg-map {
   position: relative;
   min-width: 820px;

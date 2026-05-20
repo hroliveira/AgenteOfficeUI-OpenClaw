@@ -16,14 +16,14 @@ export interface RoomConfig {
 }
 
 export const ROOMS: RoomConfig[] = [
-  { id: 'conference', label: 'CONFERENCE ROOM', icon: '🤝', description: 'Meeting Area', size: 'large' },
-  { id: 'jarvis', label: 'JARVIS OFFICE', icon: '🤖', description: 'Central Hub', size: 'large' },
+  { id: 'conference', label: 'PLATFORM OPS', icon: '🖥️', description: 'Runtime and integrations', size: 'large' },
+  { id: 'jarvis', label: 'MEETING HALL', icon: '🤝', description: 'Agent alignment room', size: 'large' },
   { id: 'kitchen', label: 'KITCHEN', icon: '☕', description: 'Break Area', size: 'large' },
 
   { id: 'scribe', label: 'SCRIBE', icon: '✍️', description: 'Writing', size: 'small' },
   { id: 'atlas', label: 'ATLAS', icon: '🌍', description: 'Global Ops', size: 'small' },
-  { id: 'claw', label: 'CLAW', icon: '⌘', description: 'Development', size: 'small' },
-  { id: 'sentinel', label: 'SENTINEL', icon: '🛡️', description: 'Security', size: 'small' },
+  { id: 'claw', label: 'CLAW', icon: '⌘', description: 'Development + QA', size: 'small' },
+  { id: 'sentinel', label: 'COMMAND WATCH', icon: '🛡️', description: 'Lilith Operations', size: 'small' },
   { id: 'pixel', label: 'PIXEL', icon: '🎨', description: 'Design', size: 'small' },
   { id: 'nova', label: 'NOVA', icon: '✨', description: 'Innovation', size: 'small' },
   { id: 'vibe', label: 'VIBE', icon: '🎧', description: 'Music', size: 'small' },

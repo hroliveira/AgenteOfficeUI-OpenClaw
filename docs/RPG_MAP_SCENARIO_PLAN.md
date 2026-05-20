@@ -59,15 +59,16 @@ Primeiro asset integrado:
 - Cada sala e um retangulo/isometrico simples com nome, icone, status e quantidade de agentes.
 - Clique em sala expande a sala em painel/modal/focus mode.
 - Clique em agente reaproveita o AgentInspector.
+- Modo reuniao automatico: ao ativar Meeting mode, todos os agentes sao exibidos temporariamente no Meeting Hall sem alterar o mapeamento permanente.
 
 ### Visual
 
 - Estilo: RPG pixel art top-down, nao 3D.
 - Paleta ainda dark/cyber fantasy, mas com mais chao, paredes e objetos.
 - Salas recomendadas:
-  - Command Hall / Lilith;
-  - Dev Forge / Tomas;
-  - QA Watchtower / Cecilia;
+  - Meeting Hall / reunioes entre agentes;
+  - Command Watch / Lilith;
+  - Dev + QA Forge / Tomas e Cecilia;
   - Market Studio / Maya;
   - Treasury / Daikokuten;
   - Platform Ops / Ariel;

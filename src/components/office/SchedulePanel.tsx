@@ -14,6 +14,8 @@ type ScheduleItem = {
   type: string;
   detail: string;
   agentId: string | null;
+  targetAgentId: string | null;
+  targetLabel: string | null;
   sessionTarget: string | null;
   payloadKind: string | null;
   deliveryMode: string | null;
@@ -146,6 +148,7 @@ export function SchedulePanel() {
                   <div className="mb-1 flex flex-wrap items-center gap-2">
                     <StatusPill status={item.status} />
                     <span className="text-[10px] uppercase text-slate-500">{item.type}</span>
+                    <span className="text-[10px] uppercase text-cyan-400">{item.targetLabel || item.targetAgentId || 'unassigned'}</span>
                     <span className="text-[10px] uppercase text-slate-600">{item.sessionTarget || item.agentId || 'no target'}</span>
                   </div>
                   <p className="truncate text-sm uppercase text-slate-100">{item.name}</p>

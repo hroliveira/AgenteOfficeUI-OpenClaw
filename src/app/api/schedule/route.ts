@@ -46,6 +46,15 @@ type RawSchedule = {
 
 type ScheduleStatus = 'ok' | 'idle' | 'skipped' | 'failed' | 'disabled' | 'unknown';
 
+const AGENT_TARGETS = [
+  { id: 'ariel-platform', label: 'Ariel', aliases: ['ariel'] },
+  { id: 'clareza-dev', label: 'Tomas', aliases: ['tomas', 'tomás', 'dev'] },
+  { id: 'clareza-qa', label: 'Cecilia', aliases: ['cecilia', 'cecília', 'qa'] },
+  { id: 'nodesync-marketing', label: 'Maya', aliases: ['maya', 'marketing'] },
+  { id: 'personal-finance', label: 'Daikokuten', aliases: ['daikokuten', 'financeiro', 'finance'] },
+  { id: 'main', label: 'Lilith', aliases: ['lilith', 'agenda'] },
+] as const;
+
 function redact(value: string) {
   return value
     .replace(/bot\d+:[A-Za-z0-9_-]+/g, 'bot<redacted>')
@@ -92,6 +101,27 @@ function scheduleDetail(job: RawSchedule) {
   return '';
 }
 
+function inferTargetAgent(job: RawSchedule) {
+  if (job.agentId && job.agentId !== 'main') {
+    const direct = AGENT_TARGETS.find(agent => agent.id === job.agentId);
+    if (direct) return direct;
+  }
+
+  const haystack = cleanText([job.name, job.sessionTarget, job.payload?.kind].filter(Boolean).join(' '), 240).toLowerCase();
+  const inferred = AGENT_TARGETS
+    .filter(agent => agent.id !== 'main')
+    .find(agent => agent.aliases.some(alias => haystack.includes(alias)));
+  if (inferred) return inferred;
+
+  if (job.agentId) {
+    const direct = AGENT_TARGETS.find(agent => agent.id === job.agentId);
+    if (direct) return direct;
+  }
+
+  if (job.sessionTarget === 'main') return AGENT_TARGETS.find(agent => agent.id === 'main')!;
+  return null;
+}
+
 async function loadSchedule() {
   const { stdout } = await execFileAsync(OPENCLAW_BIN, ['cron', 'list', '--json'], {
     timeout: 8_000,
@@ -107,27 +137,33 @@ export async function GET() {
     const schedule = jobs
       .slice()
       .sort((a, b) => (a.state?.nextRunAtMs || Number.MAX_SAFE_INTEGER) - (b.state?.nextRunAtMs || Number.MAX_SAFE_INTEGER))
-      .map(job => ({
-        id: job.id || '',
-        name: cleanText(job.name || 'Untitled schedule', 90),
-        enabled: Boolean(job.enabled),
-        deleteAfterRun: Boolean(job.deleteAfterRun),
-        status: normalizeStatus(job),
-        rawStatus: job.state?.lastStatus || job.state?.lastRunStatus || job.status || null,
-        type: scheduleLabel(job),
-        detail: cleanText(scheduleDetail(job), 80),
-        agentId: job.agentId || null,
-        sessionTarget: job.sessionTarget || null,
-        payloadKind: job.payload?.kind || null,
-        deliveryMode: job.delivery?.mode || null,
-        wakeMode: job.wakeMode || null,
-        nextRunAt: iso(job.state?.nextRunAtMs),
-        lastRunAt: iso(job.state?.lastRunAtMs),
-        lastDurationMs: job.state?.lastDurationMs ?? null,
-        lastError: job.state?.lastError ? cleanText(job.state.lastError, 120) : null,
-        consecutiveErrors: job.state?.consecutiveErrors ?? 0,
-        consecutiveSkipped: job.state?.consecutiveSkipped ?? 0,
-      }));
+      .map(job => {
+        const targetAgent = inferTargetAgent(job);
+
+        return {
+          id: job.id || '',
+          name: cleanText(job.name || 'Untitled schedule', 90),
+          enabled: Boolean(job.enabled),
+          deleteAfterRun: Boolean(job.deleteAfterRun),
+          status: normalizeStatus(job),
+          rawStatus: job.state?.lastStatus || job.state?.lastRunStatus || job.status || null,
+          type: scheduleLabel(job),
+          detail: cleanText(scheduleDetail(job), 80),
+          agentId: job.agentId || null,
+          targetAgentId: targetAgent?.id || null,
+          targetLabel: targetAgent?.label || null,
+          sessionTarget: job.sessionTarget || null,
+          payloadKind: job.payload?.kind || null,
+          deliveryMode: job.delivery?.mode || null,
+          wakeMode: job.wakeMode || null,
+          nextRunAt: iso(job.state?.nextRunAtMs),
+          lastRunAt: iso(job.state?.lastRunAtMs),
+          lastDurationMs: job.state?.lastDurationMs ?? null,
+          lastError: job.state?.lastError ? cleanText(job.state.lastError, 120) : null,
+          consecutiveErrors: job.state?.consecutiveErrors ?? 0,
+          consecutiveSkipped: job.state?.consecutiveSkipped ?? 0,
+        };
+      });
 
     const counts = schedule.reduce((acc, job) => {
       acc.total += 1;

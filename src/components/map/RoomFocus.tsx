@@ -44,6 +44,8 @@ type ScheduleItem = {
   id: string;
   name: string;
   agentId: string | null;
+  targetAgentId: string | null;
+  targetLabel: string | null;
   sessionTarget: string | null;
   status: ScheduleStatus;
   nextRunAt: string | null;
@@ -119,7 +121,10 @@ export function RoomFocus({ room, agents, onClose }: RoomFocusProps) {
           activities: (activityPayload.agents || []).filter(agent => agentIds.has(agent.id)),
           tasks: (taskPayload.tasks || []).filter(task => agentIds.has(task.agentId)).slice(0, 4),
           schedule: (schedulePayload.schedule || [])
-            .filter(item => (item.agentId ? agentIds.has(item.agentId) : agentIds.has('main') && item.sessionTarget === 'main'))
+            .filter(item => {
+              const targetAgentId = item.targetAgentId || item.agentId;
+              return targetAgentId ? agentIds.has(targetAgentId) : agentIds.has('main') && item.sessionTarget === 'main';
+            })
             .slice(0, 4),
         });
         setSignalsError(null);
@@ -254,6 +259,7 @@ export function RoomFocus({ room, agents, onClose }: RoomFocusProps) {
                           <div className="mb-1 flex flex-wrap items-center gap-2">
                             <StatusPill status={item.status} />
                             <span className="text-[10px] uppercase text-slate-600">next {formatTime(item.nextRunAt)}</span>
+                            {item.targetLabel && <span className="text-[10px] uppercase text-cyan-400">{item.targetLabel}</span>}
                           </div>
                           <p className="truncate text-xs uppercase text-slate-300">{item.name}</p>
                         </div>

@@ -200,10 +200,14 @@ function scheduleActivity(job: RawSchedule): Activity | null {
 
 function deriveAgentStatus(activities: Activity[], now: number): ActivityStatus {
   if (activities.some(activity => activity.status === 'running')) return 'running';
-  if (activities.some(activity => (activity.status === 'failed' || activity.status === 'error') && now - activity.timestamp <= ERROR_RECENT_MS)) {
+  const latest = activities[0];
+  if (
+    latest &&
+    (latest.status === 'failed' || latest.status === 'error') &&
+    now - latest.timestamp <= ERROR_RECENT_MS
+  ) {
     return 'error';
   }
-  const latest = activities[0];
   if (latest && now - latest.timestamp <= RECENT_MS) return 'recent';
   return 'idle';
 }

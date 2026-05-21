@@ -135,6 +135,16 @@ export function RpgMap() {
     return summary;
   }, [agentsByRoom, signals]);
 
+  const mapSignalTotals = useMemo(() => {
+    return Object.values(roomSignals).reduce((acc, roomSignal) => {
+      acc.activity += roomSignal.activityCount;
+      acc.tasks += roomSignal.taskCount;
+      acc.schedule += roomSignal.scheduleCount;
+      if (roomSignal.hasFailure) acc.alerts += 1;
+      return acc;
+    }, { activity: 0, tasks: 0, schedule: 0, alerts: 0 });
+  }, [roomSignals]);
+
   function toggleMeetingMode() {
     setMeetingMode(value => {
       const next = !value;
@@ -154,6 +164,10 @@ export function RpgMap() {
         </div>
         <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-cyan-300/80">
           <span>{agents.length} agents mapped</span>
+          <span className="rpg-map-signal-chip">A{mapSignalTotals.activity}</span>
+          <span className="rpg-map-signal-chip">T{mapSignalTotals.tasks}</span>
+          <span className="rpg-map-signal-chip">S{mapSignalTotals.schedule}</span>
+          {mapSignalTotals.alerts > 0 && <span className="rpg-map-alert-chip">{mapSignalTotals.alerts} alerts</span>}
           <button
             type="button"
             onClick={toggleMeetingMode}

@@ -29,9 +29,23 @@ const THEME_CLASS: Record<MapRoom['theme'], string> = {
   shared: 'rpg-room-shared',
 };
 
+function formatNextSchedule(value?: string | null) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+}
+
 export const RpgRoom = memo(function RpgRoom({ room, agents, signals, onFocus }: RpgRoomProps) {
   const hasError = agents.some(agent => agent.status === 'error') || Boolean(signals?.hasFailure);
   const hasActiveAgent = agents.some(agent => agent.status !== 'idle') || Boolean(signals?.activityCount || signals?.taskCount || signals?.scheduleCount);
+  const nextSchedule = formatNextSchedule(signals?.nextScheduleAt);
+  const signalLabel = [
+    signals?.activityCount ? `activity ${signals.activityCount}` : null,
+    signals?.taskCount ? `tasks ${signals.taskCount}` : null,
+    signals?.scheduleCount ? `schedule ${signals.scheduleCount}` : null,
+    nextSchedule ? `next ${nextSchedule}` : null,
+  ].filter(Boolean).join(', ');
 
   return (
     <button
@@ -48,7 +62,7 @@ export const RpgRoom = memo(function RpgRoom({ room, agents, signals, onFocus }:
       </span>
       <span className="rpg-room-count">{agents.length} AG</span>
       {signals && (signals.activityCount > 0 || signals.taskCount > 0 || signals.scheduleCount > 0) && (
-        <span className="rpg-room-signals" aria-label={`${room.label} signals`}>
+        <span className="rpg-room-signals" aria-label={`${room.label} signals: ${signalLabel}`} title={signalLabel}>
           {signals.activityCount > 0 && <span>A{signals.activityCount}</span>}
           {signals.taskCount > 0 && <span>T{signals.taskCount}</span>}
           {signals.scheduleCount > 0 && <span>S{signals.scheduleCount}</span>}

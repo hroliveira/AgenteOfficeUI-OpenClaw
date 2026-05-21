@@ -180,6 +180,33 @@ body {
   opacity: 1;
 }
 
+.rpg-room-signals {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  z-index: 4;
+  display: flex;
+  gap: 3px;
+  opacity: 0.74;
+  transition: opacity 160ms ease;
+}
+
+.rpg-room-signals span {
+  border: 1px solid rgba(103, 232, 249, 0.32);
+  background: rgba(2, 6, 23, 0.58);
+  color: #67e8f9;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  text-shadow: 0 2px 6px #020617;
+}
+
+.rpg-room:hover .rpg-room-signals,
+.rpg-room:focus-visible .rpg-room-signals {
+  opacity: 1;
+}
+
 .rpg-room-command { border-color: rgba(8, 145, 178, 0.28); }
 .rpg-room-dev { border-color: rgba(37, 99, 235, 0.28); }
 .rpg-room-qa { border-color: rgba(124, 58, 237, 0.28); }

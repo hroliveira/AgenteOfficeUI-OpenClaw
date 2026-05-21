@@ -88,6 +88,15 @@ function StatusPill({ status }: { status: ActivityStatus | TaskStatus | Schedule
   );
 }
 
+function SummaryTile({ label, value, tone = 'text-slate-100' }: { label: string; value: number | string; tone?: string }) {
+  return (
+    <div className="border border-slate-800 bg-black/30 px-2 py-1.5">
+      <span className={`block text-base font-bold leading-none ${tone}`}>{value}</span>
+      <small className="mt-1 block text-[9px] uppercase leading-none text-slate-500">{label}</small>
+    </div>
+  );
+}
+
 export function RoomFocus({ room, agents, onClose }: RoomFocusProps) {
   const selectAgent = useAgentStore(s => s.selectAgent);
   const agentIds = useMemo(() => new Set(agents.map(agent => agent.id)), [agents]);
@@ -147,6 +156,56 @@ export function RoomFocus({ room, agents, onClose }: RoomFocusProps) {
       .sort((a, b) => new Date(b.at || 0).getTime() - new Date(a.at || 0).getTime())
       .slice(0, 4);
   }, [signals]);
+
+  const failures = useMemo(() => {
+    if (!signals) return [];
+
+    const failedActivities = recentActivities
+      .filter(activity => activity.status === 'error' || activity.status === 'failed')
+      .map(activity => ({
+        id: `activity-${activity.agentName}-${activity.source}-${activity.at}`,
+        status: activity.status,
+        label: `${activity.agentName} / ${activity.source}`,
+        detail: activity.summary,
+        time: activity.at,
+      }));
+
+    const failedTasks = signals.tasks
+      .filter(task => task.status === 'failed')
+      .map(task => ({
+        id: `task-${task.id || task.label}`,
+        status: task.status,
+        label: task.label,
+        detail: task.summary,
+        time: task.lastEventAt,
+      }));
+
+    const failedSchedules = signals.schedule
+      .filter(item => item.status === 'failed')
+      .map(item => ({
+        id: `schedule-${item.id || item.name}`,
+        status: item.status,
+        label: item.name,
+        detail: item.targetLabel || item.sessionTarget || 'schedule',
+        time: item.lastRunAt,
+      }));
+
+    return [...failedActivities, ...failedTasks, ...failedSchedules].slice(0, 3);
+  }, [recentActivities, signals]);
+
+  const nextSchedule = useMemo(() => {
+    return (signals?.schedule || [])
+      .filter(item => item.nextRunAt)
+      .slice()
+      .sort((a, b) => new Date(a.nextRunAt || 0).getTime() - new Date(b.nextRunAt || 0).getTime())[0] || null;
+  }, [signals]);
+
+  const signalSummary = useMemo(() => ({
+    activity: recentActivities.length,
+    tasks: signals?.tasks.length || 0,
+    schedule: signals?.schedule.length || 0,
+    alerts: failures.length,
+  }), [failures.length, recentActivities.length, signals]);
 
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/80 p-3 font-pixel">
@@ -218,6 +277,42 @@ export function RoomFocus({ room, agents, onClose }: RoomFocusProps) {
 
               {signals && (
                 <div className="space-y-3">
+                  <div className="grid grid-cols-4 gap-1 text-center">
+                    <SummaryTile label="agents" value={agents.length} />
+                    <SummaryTile label="activity" value={signalSummary.activity} />
+                    <SummaryTile label="tasks" value={signalSummary.tasks} />
+                    <SummaryTile label="alerts" value={signalSummary.alerts} tone={signalSummary.alerts ? 'text-red-300' : 'text-slate-100'} />
+                  </div>
+
+                  {nextSchedule && (
+                    <div className="border border-amber-500/30 bg-amber-950/10 p-2">
+                      <p className="mb-1 text-[10px] uppercase text-amber-300">Next routine</p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <StatusPill status={nextSchedule.status} />
+                        <span className="text-[10px] uppercase text-slate-500">{formatTime(nextSchedule.nextRunAt)}</span>
+                      </div>
+                      <p className="mt-1 truncate text-xs uppercase text-slate-300">{nextSchedule.name}</p>
+                    </div>
+                  )}
+
+                  {failures.length > 0 && (
+                    <div>
+                      <p className="mb-1 text-[10px] uppercase text-red-300">Needs attention</p>
+                      <div className="space-y-1.5">
+                        {failures.map(item => (
+                          <div key={item.id} className="border border-red-500/30 bg-red-950/10 p-2">
+                            <div className="mb-1 flex flex-wrap items-center gap-2">
+                              <StatusPill status={item.status} />
+                              <span className="text-[10px] uppercase text-slate-500">{formatTime(item.time)}</span>
+                            </div>
+                            <p className="truncate text-xs uppercase text-slate-200">{item.label}</p>
+                            {item.detail && <p className="mt-1 line-clamp-2 text-xs leading-snug text-slate-500">{item.detail}</p>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div>
                     <p className="mb-1 text-[10px] uppercase text-slate-500">Activity</p>
                     <div className="space-y-1.5">
